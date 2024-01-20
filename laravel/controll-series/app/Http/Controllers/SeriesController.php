@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SeriesFormRequest;
 use App\Models\Serie;
 use Illuminate\Http\Request;
 
@@ -23,8 +24,13 @@ class SeriesController extends Controller
         return view('series.create');
     }
 
-    public function store(Request $request)
+    public function store(SeriesFormRequest $request)
     {
+        // local validation - moved to Requests module
+        // $request->validate([
+        //     'name' => ['required', 'min:3']
+        // ]);
+
         $series = Serie::create($request->all());
         // with: add flash message
         return to_route('series.index')->with('message.success', "Series '{$series->name}' created successfully");
@@ -42,7 +48,7 @@ class SeriesController extends Controller
         return view('series.edit')->with('series', $series);
     }
 
-    public function update(Serie $series, Request $request)
+    public function update(SeriesFormRequest $series, Request $request)
     {
         $series->fill($request->all());
         $series->save();
