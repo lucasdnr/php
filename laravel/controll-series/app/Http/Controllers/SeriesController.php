@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SeriesFormRequest;
+use App\Models\Episode;
+use App\Models\Season;
 use App\Models\Series;
 use Illuminate\Http\Request;
 
@@ -33,6 +35,28 @@ class SeriesController extends Controller
         // ]);
 
         $series = Series::create($request->all());
+        $seasons = [];
+        for ($i = 1; $i < $request->seasonsQty; $i++) {
+            $seasons[] = [
+                'series_id' => $series->id,
+                'number' => $i,
+            ];
+        }
+
+        // insert seasons
+        Season::insert($seasons);
+
+        $episodes = [];
+        for ($i = 1; $i < $request->episodesQty; $i++) {
+            $episodes[] = [
+                'season_id' => $series->id,
+                'number' => $i,
+            ];
+        }
+
+        // insert episodes
+        Episode::insert($episodes);
+
         // with: add flash message
         return to_route('series.index')->with('message.success', "Series '{$series->name}' created successfully");
     }
