@@ -27,4 +27,14 @@ class SeriesFormRequest extends FormRequest
             'name' => ['required', 'min:3']
         ];
     }
+
+    /**
+     * Return custom messages
+     *
+     * @return void
+     */
+    // public function messages()
+    // {
+    //     return []
+    // }
 }

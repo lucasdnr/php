@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SeriesFormRequest;
-use App\Models\Serie;
+use App\Models\Series;
 use Illuminate\Http\Request;
 
 class SeriesController extends Controller
 {
     public function index(Request $request)
     {
-        $series = Serie::query()->orderBy('name')->get();
+        // $series = Serie::query()->orderBy('name')->get();
+        $series = Series::all();
         $messageSuccess = session()->get('message.success');
         // return view('series-list', ['series' => $series]);
         // return view('series-list', compact('series'));
@@ -31,24 +32,24 @@ class SeriesController extends Controller
         //     'name' => ['required', 'min:3']
         // ]);
 
-        $series = Serie::create($request->all());
+        $series = Series::create($request->all());
         // with: add flash message
         return to_route('series.index')->with('message.success', "Series '{$series->name}' created successfully");
     }
 
-    public function destroy(Serie $series)
+    public function destroy(Series $series)
     {
         $series->delete();
         // with: add flash message
         return to_route('series.index')->with('message.success', "Series '{$series->name}' deleted successfully");
     }
 
-    public function edit(Serie $series)
+    public function edit(Series $series)
     {
         return view('series.edit')->with('series', $series);
     }
 
-    public function update(SeriesFormRequest $series, Request $request)
+    public function update(Series $series, SeriesFormRequest $request)
     {
         $series->fill($request->all());
         $series->save();
