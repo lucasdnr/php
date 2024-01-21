@@ -18,12 +18,11 @@ class SeriesController extends Controller
     {
         // $series = Serie::query()->orderBy('name')->get();
         $series = Series::all();
-        $messageSuccess = session()->get('message.success');
         // return view('series-list', ['series' => $series]);
         // return view('series-list', compact('series'));
         return view('series.index')
             ->with('series', $series)
-            ->with('message', $messageSuccess);
+            ->with('message', session('message.success'));
     }
 
     public function create()
@@ -40,7 +39,8 @@ class SeriesController extends Controller
         $series = $this->repository->add($request);
 
         // with: add flash message
-        return to_route('series.index')->with('message.success', "Series '{$series->name}' created successfully");
+        return to_route('series.index')
+                ->with('message.success', "Series '{$series->name}' created successfully");
     }
 
     public function destroy(Series $series)

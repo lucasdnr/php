@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Episode;
 use App\Models\Season;
-use Hamcrest\Arrays\IsArray;
 use Illuminate\Http\Request;
 
 class EpisodesController extends Controller
 {
     public function index(Season $season)
     {
-        return view('episodes.index')->with('episodes', $season->episodes);
+        return view('episodes.index')
+            ->with('episodes', $season->episodes)
+            ->with('message', session('message.success'));
     }
 
     public function update(Request $request, Season $season)
@@ -23,6 +24,7 @@ class EpisodesController extends Controller
         // update
         $season->push();
 
-        return to_route('episodes.index', $season->id);
+        return to_route('episodes.index', $season->id)
+            ->with('message.success', 'Episodes updated successfully');
     }
 }
