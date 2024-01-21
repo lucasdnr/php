@@ -12,7 +12,9 @@ class EloquentSeriesRepository implements SeriesRepository
 {
     public function add(SeriesFormRequest $request): Series
     {
-        return DB::transaction(function () use ($request) {
+        try {
+            DB::beginTransaction();
+
             $series = Series::create($request->all());
             $seasons = [];
             for ($i = 1; $i <= $request->seasonsQty; $i++) {
@@ -38,7 +40,13 @@ class EloquentSeriesRepository implements SeriesRepository
             // insert episodes
             Episode::insert($episodes);
 
+            DB::commit();
+
             return $series;
-        });
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new \Exception($e->getMessage());
+        }
+
     }
 }
