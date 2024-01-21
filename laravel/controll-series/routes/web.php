@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SeasonsController;
 use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\UsersController;
+use App\Http\Middleware\Authentication;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,8 +19,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return redirect('/series');
+Route::middleware([Authentication::class])->group(function () {
+    Route::get('/', function () {
+        return redirect('/series');
+    });
 });
 
 // Route::resource('/series', SeriesController::class)
@@ -42,11 +45,14 @@ Route::post('/season/{season}/episodes', [EpisodesController::class, 'update'])
     ->name('episodes.update');
 
 Route::get('/login', [LoginController::class, 'index'])
-    ->name('login.index');
+    ->name('login');
 Route::post('/login', [LoginController::class, 'store'])
-    ->name('login.signin');
+    ->name('signin');
 
 Route::get('/register', [UsersController::class, 'create'])
     ->name('users.create');
 Route::post('/register', [UsersController::class, 'store'])
     ->name('users.store');
+
+Route::get('/logout', [LoginController::class, 'destroy'])
+    ->name('logout');    
