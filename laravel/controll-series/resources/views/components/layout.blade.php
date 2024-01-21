@@ -16,6 +16,10 @@
             @auth
                 <a href="{{ route('logout') }}">Logout</a>
             @endauth
+
+            @guest
+                <a href="{{ route('login') }}">Signin</a>
+            @endguest
         </div>
     </nav>
     <div class="container">
