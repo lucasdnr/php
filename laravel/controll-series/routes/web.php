@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\EpisodesController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SeasonsController;
 use App\Http\Controllers\SeriesController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,7 +33,20 @@ Route::resource('/series', SeriesController::class)
 //     Route::post('/series/save', 'store')->name('series.store');
 // });
 
-Route::get('/series/{series}/seasons', [SeasonsController::class, 'index'])->name('seasons.index');
+Route::get('/series/{series}/seasons', [SeasonsController::class, 'index'])
+    ->name('seasons.index');
 
-Route::get('/season/{season}/episodes', [EpisodesController::class, 'index'])->name('episodes.index');
-Route::post('/season/{season}/episodes', [EpisodesController::class, 'update'])->name('episodes.update');;
+Route::get('/season/{season}/episodes', [EpisodesController::class, 'index'])
+    ->name('episodes.index');
+Route::post('/season/{season}/episodes', [EpisodesController::class, 'update'])
+    ->name('episodes.update');
+
+Route::get('/login', [LoginController::class, 'index'])
+    ->name('login.index');
+Route::post('/login', [LoginController::class, 'store'])
+    ->name('login.signin');
+
+Route::get('/register', [UsersController::class, 'create'])
+    ->name('users.create');
+Route::post('/register', [UsersController::class, 'store'])
+    ->name('users.store');
