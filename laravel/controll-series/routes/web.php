@@ -34,4 +34,4 @@ Route::resource('/series', SeriesController::class)
 Route::get('/series/{series}/seasons', [SeasonsController::class, 'index'])->name('seasons.index');
 
 Route::get('/season/{season}/episodes', [EpisodesController::class, 'index'])->name('episodes.index');
-Route::post('/season/{season}/episodes', [EpisodesController::class, 'store']);
+Route::post('/season/{season}/episodes', [EpisodesController::class, 'update'])->name('episodes.update');;
