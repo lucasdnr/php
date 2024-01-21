@@ -53,5 +53,5 @@ Route::get('/register', [UsersController::class, 'create'])
 Route::post('/register', [UsersController::class, 'store'])
     ->name('users.store');
 
-Route::get('/logout', [LoginController::class, 'destroy'])
+Route::post('/logout', [LoginController::class, 'destroy'])
     ->name('logout');    
