@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SeriesCreated;
 use App\Http\Requests\SeriesFormRequest;
-use App\Mail\SeriesCreated;
 use App\Models\Series;
-use App\Models\User;
 use App\Repositories\SeriesRepository;
 use DateTime;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 
 class SeriesController extends Controller
 {
@@ -41,19 +39,14 @@ class SeriesController extends Controller
         // ]);
         $series = $this->repository->add($request);
 
-        $userList = User::all();
-        foreach ($userList as $index => $user) {
-            // send email
-            $email = new SeriesCreated(
-                $series->name,
-                $series->id,
-                $request->seasonsQty,
-                $request->episodesQty,
-            );
-            $when = now()->addSeconds($index * 2);
-            Mail::to($user)->later($when, $email);
-            // Mail::to($user)->queue($email);
-        }
+        // add event
+        $seriesCreated = new SeriesCreated(
+            $series->name,
+            $series->id,
+            $request->seasonsQty,
+            $request->episodesQty,
+        );
+        event($seriesCreated);
 
         // with: add flash message
         return to_route('series.index')
