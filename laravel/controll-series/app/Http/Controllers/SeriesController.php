@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Events\SeriesCreated;
+use App\Events\SeriesDeleted;
 use App\Http\Requests\SeriesFormRequest;
 use App\Models\Series;
 use App\Repositories\SeriesRepository;
 use DateTime;
 use Illuminate\Http\Request;
+
+use function PHPUnit\Framework\isNull;
 
 class SeriesController extends Controller
 {
@@ -39,9 +42,11 @@ class SeriesController extends Controller
         // ]);
 
         // handler file
-        $coverPath = $request->file('cover')
-            ->store('series_cover','public');
-        $request->coverPath = $coverPath;
+        if(!isNull($request->file('cover'))){
+            $coverPath = $request->file('cover')
+                ->store('series_cover','public');
+            $request->coverPath = $coverPath;
+        }
 
         $series = $this->repository->add($request);
 
@@ -62,6 +67,13 @@ class SeriesController extends Controller
     public function destroy(Series $series)
     {
         $series->delete();
+
+        // add event
+        $seriesDeleted = new SeriesDeleted(
+            $series->cover ?? '',
+        );
+        event($seriesDeleted);
+
         // with: add flash message
         return to_route('series.index')->with('message.success', "Series '{$series->name}' deleted successfully");
     }
