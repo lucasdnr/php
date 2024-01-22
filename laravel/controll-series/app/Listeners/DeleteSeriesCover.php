@@ -29,7 +29,8 @@ class DeleteSeriesCover
      */
     public function handle(SeriesDeleted $event)
     {
-        if(!isNull($event->seriesCoverPath) && $event->seriesCoverPath !== ""){
+        // dd($event->seriesCoverPath);
+        if($event->seriesCoverPath !== ""){
             Storage::disk('public')->delete($event->seriesCoverPath);
         }
     }

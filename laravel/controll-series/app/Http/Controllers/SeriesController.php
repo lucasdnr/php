@@ -40,14 +40,13 @@ class SeriesController extends Controller
         // $request->validate([
         //     'name' => ['required', 'min:3']
         // ]);
-
+        
         // handler file
-        if(!isNull($request->file('cover'))){
+        if($request->hasFile('cover')){ 
             $coverPath = $request->file('cover')
                 ->store('series_cover','public');
             $request->coverPath = $coverPath;
         }
-
         $series = $this->repository->add($request);
 
         // add event
