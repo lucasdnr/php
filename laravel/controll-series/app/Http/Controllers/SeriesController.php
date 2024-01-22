@@ -33,6 +33,7 @@ class SeriesController extends Controller
 
     public function store(SeriesFormRequest $request)
     {
+        dd($request->file('cover'));
         // local validation - moved to Requests module
         // $request->validate([
         //     'name' => ['required', 'min:3']
