@@ -7,6 +7,7 @@ use App\Mail\SeriesCreated;
 use App\Models\Series;
 use App\Models\User;
 use App\Repositories\SeriesRepository;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -41,7 +42,7 @@ class SeriesController extends Controller
         $series = $this->repository->add($request);
 
         $userList = User::all();
-        foreach ($userList as $user) {
+        foreach ($userList as $index => $user) {
             // send email
             $email = new SeriesCreated(
                 $series->name,
@@ -49,7 +50,9 @@ class SeriesController extends Controller
                 $request->seasonsQty,
                 $request->episodesQty,
             );
-            Mail::to($user)->queue($email);
+            $when = now()->addSeconds($index * 2);
+            Mail::to($user)->later($when, $email);
+            // Mail::to($user)->queue($email);
         }
 
         // with: add flash message
