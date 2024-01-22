@@ -15,7 +15,12 @@ class EloquentSeriesRepository implements SeriesRepository
         try {
             DB::beginTransaction();
 
-            $series = Series::create($request->all());
+            // $series = Series::create($request->all());
+            $series = Series::create([
+                'name' => $request->name,
+                'cover' => $request->coverPath,
+
+            ]);
             $seasons = [];
             for ($i = 1; $i <= $request->seasonsQty; $i++) {
                 $seasons[] = [
@@ -47,6 +52,5 @@ class EloquentSeriesRepository implements SeriesRepository
             DB::rollBack();
             throw new \Exception($e->getMessage());
         }
-
     }
 }

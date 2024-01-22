@@ -33,11 +33,16 @@ class SeriesController extends Controller
 
     public function store(SeriesFormRequest $request)
     {
-        dd($request->file('cover'));
         // local validation - moved to Requests module
         // $request->validate([
         //     'name' => ['required', 'min:3']
         // ]);
+
+        // handler file
+        $coverPath = $request->file('cover')
+            ->store('series_cover','public');
+        $request->coverPath = $coverPath;
+
         $series = $this->repository->add($request);
 
         // add event
