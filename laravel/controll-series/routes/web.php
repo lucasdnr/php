@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SeasonsController;
 use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\UsersController;
+use App\Mail\SeriesCreated;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -55,3 +56,11 @@ Route::post('/register', [UsersController::class, 'store'])
 
 Route::post('/logout', [LoginController::class, 'destroy'])
     ->name('logout');    
+
+Route::get('/email', function (){
+    return new SeriesCreated(        
+        'Testing series',
+        1,
+        5,
+        10);
+});

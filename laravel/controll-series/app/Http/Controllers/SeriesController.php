@@ -3,15 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SeriesFormRequest;
+use App\Mail\SeriesCreated;
 use App\Models\Series;
+use App\Models\User;
 use App\Repositories\SeriesRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class SeriesController extends Controller
 {
     public function __construct(private SeriesRepository $repository)
     {
-        
     }
 
     public function index(Request $request)
@@ -38,9 +40,21 @@ class SeriesController extends Controller
         // ]);
         $series = $this->repository->add($request);
 
+        $userList = User::all();
+        foreach ($userList as $user) {
+            // send email
+            $email = new SeriesCreated(
+                $series->name,
+                $series->id,
+                $request->seasonsQty,
+                $request->episodesQty,
+            );
+            Mail::to($user)->queue($email);
+        }
+
         // with: add flash message
         return to_route('series.index')
-                ->with('message.success', "Series '{$series->name}' created successfully");
+            ->with('message.success', "Series '{$series->name}' created successfully");
     }
 
     public function destroy(Series $series)
