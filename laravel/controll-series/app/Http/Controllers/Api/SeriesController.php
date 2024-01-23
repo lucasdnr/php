@@ -27,17 +27,24 @@ class SeriesController extends Controller
             ->json($series, 201);
     }
 
-    public function show(int $series){
+    public function show(int $series)
+    {
         $series = Series::whereId($series)->with('seasons.episodes')->first();
         return response()
             ->json($series);
     }
 
-    public function update(int $series){
-
+    public function update(Series $series, SeriesFormRequest $request)
+    {
+        $series->fill($request->all());
+        $series->save();
+        return response()
+            ->json($series);
     }
-    
-    public function destroy(int $series){
-    }
 
+    public function destroy(int $series)
+    {
+        Series::destroy($series);
+        return response()->noContent();
+    }
 }
