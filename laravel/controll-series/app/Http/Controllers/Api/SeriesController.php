@@ -8,6 +8,8 @@ use App\Models\Series;
 use App\Repositories\SeriesRepository;
 use Illuminate\Http\Request;
 
+use function PHPUnit\Framework\isNull;
+
 class SeriesController extends Controller
 {
     public function __construct(private SeriesRepository $seriesRepository)
@@ -30,14 +32,19 @@ class SeriesController extends Controller
     public function show(int $series)
     {
         $series = Series::whereId($series)->with('seasons.episodes')->first();
+        if (is_null($series)) {
+            return response()
+                ->json(['message' => 'Series not found'], 404);
+        }
         return response()
             ->json($series);
     }
 
-    public function update(Series $series, SeriesFormRequest $request)
+    public function update(int $series, SeriesFormRequest $request)
     {
-        $series->fill($request->all());
-        $series->save();
+        // $series->fill($request->all());
+        // $series->save();
+        Series::where('id', $series)->update($request->all());
         return response()
             ->json($series);
     }
@@ -46,5 +53,15 @@ class SeriesController extends Controller
     {
         Series::destroy($series);
         return response()->noContent();
+    }
+
+    public function getEpisodes(Series $series){
+        return response()
+            ->json($series->episodes);
+    }
+
+    public function getSeasons(Series $series){
+        return response()
+            ->json($series->seasons);
     }
 }
