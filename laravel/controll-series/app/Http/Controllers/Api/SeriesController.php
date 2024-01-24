@@ -15,9 +15,16 @@ class SeriesController extends Controller
     public function __construct(private SeriesRepository $seriesRepository)
     {
     }
-    public function index()
+    public function index(Request $request)
     {
-        return Series::all();
+        $query = Series::query();
+
+        if ($request->has('name')) {
+            $query->where('name', $request->name);
+        }
+        // return Series::whereName($request->name)->get();
+        // return $query->get();
+        return $query->paginate(2);
     }
 
     public function store(SeriesFormRequest $request)
@@ -55,12 +62,14 @@ class SeriesController extends Controller
         return response()->noContent();
     }
 
-    public function getEpisodes(Series $series){
+    public function getEpisodes(Series $series)
+    {
         return response()
             ->json($series->episodes);
     }
 
-    public function getSeasons(Series $series){
+    public function getSeasons(Series $series)
+    {
         return response()
             ->json($series->seasons);
     }
