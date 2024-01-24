@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,6 +19,8 @@ class LoginController extends Controller
         $token = "";
         // creating token
         if ($user instanceof \App\Models\User) {
+            // delete previous token from user
+            $user->tokens()->delete();
             $token = $user->createToken('token');
         }
         return response()
