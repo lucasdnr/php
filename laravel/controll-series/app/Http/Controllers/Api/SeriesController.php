@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\SeriesDeleted;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SeriesFormRequest;
 use App\Models\Series;
@@ -56,9 +57,17 @@ class SeriesController extends Controller
             ->json($series);
     }
 
-    public function destroy(int $series)
+    public function destroy(Series $series)
     {
-        Series::destroy($series);
+        Series::destroy($series->id);
+
+        // trigger event to delete image from store
+        // add event
+        $seriesDeleted = new SeriesDeleted(
+            $series->cover ?? '',
+        );
+        event($seriesDeleted);
+
         return response()->noContent();
     }
 

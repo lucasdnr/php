@@ -82,6 +82,7 @@ The API provides the following routes:
   - **GET /api/series/{series}/seasons:** Retrieve seasons for a specific series.
   - **GET /api/series/{series}/episodes:** Retrieve episodes for a specific series.
   - **PATCH /api/episodes/{episode}:** Update the watched status of a specific episode.
+  - **POST /api/image/upload:** Upload an image to store and return the path of image.
 
 Please refer to the controllers (`SeriesController`, `EpisodesController`, and `LoginController`) for detailed implementation.
 
