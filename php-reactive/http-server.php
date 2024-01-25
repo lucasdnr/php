@@ -1,6 +1,6 @@
 <?php
 
-$espera = rand(1, 5);
-sleep($espera);
+$wait = rand(1, 5);
+sleep($wait);
 
-echo "Resposta do servidor que levou $espera segundos" . PHP_EOL;
+echo "Server response that took $wait seconds" . PHP_EOL;

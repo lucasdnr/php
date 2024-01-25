@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\EpisodesController;
+use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\SeriesController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,12 +17,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:sanctum'])->group(function(){
+Route::middleware(['auth:sanctum'])->group(function () {
+    // series
     Route::apiResource('/series', SeriesController::class);
     Route::get('/series/{series}/seasons', [SeriesController::class, 'getSeasons']);
     Route::get('/series/{series}/episodes', [SeriesController::class, 'getEpisodes']);
-    
+
+    // episodes
     Route::patch('/episodes/{episode}', [EpisodesController::class, 'update']);
+
+    // upload image
+    Route::post('/image/upload', [ImageController::class, 'store']);
 });
 
 
